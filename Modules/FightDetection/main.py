@@ -14,10 +14,12 @@ class FightDetection:
     path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self, debug):
-        self.model_name = "FightDetection"
+        self.model_name = "assault"
         self.history = []
         self.debug = debug
         self.result = 0
+        self.analysis_time = 0
+        self.debug = debug
 
     def analysis_from_json(self, od_result):
 
@@ -26,14 +28,14 @@ class FightDetection:
             self.history = []
 
 
-        self.result = "safe"
+        self.result = 0
         start = 0
         end = 0
         if self.debug :
             start = time.time()
 
-        od_result = od_result.decode('utf-8').replace("'", '"')
-        od_result = json.loads(od_result)
+        # od_result = od_result.decode('utf-8').replace("'", '"')
+        # od_result = json.loads(od_result)
         #if too long
 
         position_list = []

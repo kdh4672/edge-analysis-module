@@ -12,7 +12,7 @@ class Obstacle:
     path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self, debug):
-        self.model_name = "Obstacle"
+        self.model_name = "risk_factors"
         self.analysis_time = 0
         self.debug = debug
         #검출대상(보행장애물)
@@ -30,8 +30,9 @@ class Obstacle:
 
         # result json - image_path, cam_id, frame_num, detected_categories(label, score, center_coordinates)
 
-        received = od_result.decode('utf-8').replace("'", '"') # byte to string
-        data = json.loads(received) # load json string
+        # received = od_result.decode('utf-8').replace("'", '"') # byte to string
+        # data = json.loads(received) # load json string
+        data = od_result
 
         state = 0
         for _, e in enumerate(data['results'][0]['detection_result']): # json 파일의 검출 객체 목록

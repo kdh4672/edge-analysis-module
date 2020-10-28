@@ -2,6 +2,7 @@ from Modules.tailing_kidnapping.main import Tailing_Kidnapping
 from Modules.obstacle.main import Obstacle
 from Modules.FightDetection.main import FightDetection
 from Modules.WanderDetection.main import WanderDetection
+from Modules.FalldownDetection.main import FalldownDetection
 from threading import Thread
 import socket
 from datetime import datetime
@@ -28,21 +29,25 @@ class EventDetector:
         self.models = []
 
         fight_detection_model = FightDetection(self.debug)
+        self.models.append(fight_detection_model)
         print("INFO: {} - {} model is loaded".format(datetime.now(), fight_detection_model.model_name))
 
         wander_detection_model = WanderDetection(self.debug)
+        self.models.append(wander_detection_model)
         print("INFO: {} - {} model is loaded".format(datetime.now(), wander_detection_model.model_name))
 
+        falldown_detection_model = FalldownDetection(self.debug)
+        self.models.append(falldown_detection_model)
+        print("INFO: {} - {} model is loaded".format(datetime.now(), falldown_detection_model.model_name))
+
         obstacle_model = Obstacle(self.debug)
+        self.models.append(obstacle_model)
         print("INFO: {} - {} model is loaded".format(datetime.now(), obstacle_model.model_name))
 
         tailing_kidnapping_model = Tailing_Kidnapping(self.debug)
+        self.models.append(tailing_kidnapping_model)
         print("INFO: {} - {} model is loaded".format(datetime.now(), tailing_kidnapping_model.model_name))
 
-        self.models.append(fight_detection_model)
-        self.models.append(wander_detection_model)
-        self.models.append(obstacle_model)
-        self.models.append(tailing_kidnapping_model)
         print("INFO: {} - Server is Initialized".format(datetime.now()))
 
     def detect_event(self, od_result):

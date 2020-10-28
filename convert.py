@@ -7,15 +7,17 @@ import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Please check that you enter parameters and server is turned on")
     parser.add_argument("--video_name", type=str, default="1_360p", help="video name")
+    parser.add_argument("--date", type=str, default="1028", help="date")
 
     opt = parser.parse_known_args()[0]
 
     video_name = opt.video_name
+    date = opt.date
     print(video_name)
 
     video_path = os.path.join(os.getcwd(), "data", "videos", "videos", video_name + ".mp4")
-    json_path = os.path.join(os.getcwd(), "data", "videos", "videos", video_name + ".json")
-    frame_json_dir = os.path.join(os.getcwd(), "data", "event", video_name)
+    json_path = os.path.join(os.getcwd(), "data", "videos", "videos", video_name + "_" + date + ".json")
+    frame_json_dir = os.path.join(os.getcwd(), "data", "event", date, video_name)
     frame_json_list = sorted(os.listdir(frame_json_dir))
     fps = 30
 
@@ -33,7 +35,7 @@ if __name__ == '__main__':
         "event": []
     }
 
-    event_name_list = ["assault", "risk_factors", "pedestrian_abnormal_behavior_fall", "wanderer"]
+    event_name_list = ["assault", "risk_factors", "falldown", "wanderer", "kidnapping"]
 
     frame_events = {}
     for event_name in event_name_list:
@@ -49,25 +51,31 @@ if __name__ == '__main__':
 
         for event in event_list:
             if event["name"] == event_name_list[0]:
-                if event["result"] == "warning" :
+                if event["result"] == 1 :
                     frame_events[event["name"]].append([frame_json["frame_num"], True])
-                elif event["result"] == "safe" :
+                elif event["result"] == 0 :
                     frame_events[event["name"]].append([frame_json["frame_num"], False])
             elif event["name"] == event_name_list[1]:
-                if len(event["result"]) > 0 :
+                if event["result"] == 1 :
                     frame_events[event["name"]].append([frame_json["frame_num"], True])
-                else :
+                if event["result"] == 0:
                     frame_events[event["name"]].append([frame_json["frame_num"], False])
             elif event["name"] == event_name_list[2]:
-                if event["result"] == "warning":
+                if event["result"] == 1:
                     frame_events[event["name"]].append([frame_json["frame_num"], True])
-                elif event["result"] == "safe":
+                elif event["result"] == 0:
                     frame_events[event["name"]].append([frame_json["frame_num"], False])
             elif event["name"] == event_name_list[3]:
-                if len(event["result"]) > 0:
+                if event["result"] == 1:
                     frame_events[event["name"]].append([frame_json["frame_num"], True])
-                else:
+                elif event["result"] == 0:
                     frame_events[event["name"]].append([frame_json["frame_num"], False])
+            elif event["name"] == event_name_list[4]:
+                if event["result"] == 1:
+                    frame_events[event["name"]].append([frame_json["frame_num"], True])
+                elif event["result"] == 0:
+                    frame_events[event["name"]].append([frame_json["frame_num"], False])
+
 
     for event_name in event_name_list :
         prev_event = None
@@ -77,22 +85,23 @@ if __name__ == '__main__':
             if i == 0:
                 prev_event = event
             elif i == len(frame_events[event_name])-1:
-                end_frame = event[0]
-                result = {
-                    "event": event_name,
-                    "start_frame": start_frame,
-                    "end_frame": end_frame
-                }
-                results["event"].append(result)
-                print("fin", event[0], event[1])
+                if prev_event[1] == True and event[1] == True:
+                    end_frame = event[0]
+                    result = {
+                        "event": event_name,
+                        "start_frame": start_frame,
+                        "end_frame": end_frame
+                    }
+                    results["event"].append(result)
+                    # print("fin", event[0], event[1])
             else :
                 if prev_event[1] == False and event[1] == True:
-                    print("new", event[0], event[1])
+                    # print("new", event[0], event[1])
                     start_frame = event[0]
 
                 elif prev_event[1] == True and event[1] == True :
                     pass
-                    print("cont.", event[0], event[1])
+                    # print("cont.", event[0], event[1])
                 elif prev_event[1] == True and event[1] == False :
                     end_frame = event[0]
                     result = {
@@ -101,10 +110,12 @@ if __name__ == '__main__':
                         "end_frame": end_frame
                     }
                     results["event"].append(result)
-                    print("fin", event[0], event[1])
+                    # print("fin", event[0], event[1])
+                    # print("end_frame: {}".format(end_frame))
 
                 else :
-                    print("pass", event[0], event[1])
+                    # print("pass", event[0], event[1])
+                    pass
                 prev_event = event
 
     print("json_path:", json_path)

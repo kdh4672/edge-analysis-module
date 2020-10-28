@@ -12,7 +12,7 @@ class Tailing_Kidnapping:
     path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self, debug):
-        self.model_name = "Tailing_Kidnapping"
+        self.model_name = "kidnapping"
         self.analysis_time = 0
         self.debug = debug
         self.history = []
@@ -25,8 +25,9 @@ class Tailing_Kidnapping:
         if self.debug :
             start = time.time()
 
-        received = od_result.decode('utf-8').replace("'", '"')
-        data = json.loads(received)
+        # received = od_result.decode('utf-8').replace("'", '"')
+        # data = json.loads(received)
+        data = od_result
 
         result = OrderedDict()
         detected_person = []

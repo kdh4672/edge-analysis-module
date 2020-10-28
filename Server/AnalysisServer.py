@@ -26,22 +26,22 @@ class AnalysisServer:
         self.server_socket.listen()
         self.models = []
 
-        fight_detection_model = FightDetection(self.debug)
-        print("INFO: {} - {} model is loaded".format(datetime.now(), fight_detection_model.model_name))
+        # fight_detection_model = FightDetection(self.debug)
+        # print("INFO: {} - {} model is loaded".format(datetime.now(), fight_detection_model.model_name))
 
-        wander_detection_model = WanderDetection(self.debug)
-        print("INFO: {} - {} model is loaded".format(datetime.now(), wander_detection_model.model_name))
+        # wander_detection_model = WanderDetection(self.debug)
+        # print("INFO: {} - {} model is loaded".format(datetime.now(), wander_detection_model.model_name))
+        #
+        # obstacle_model = Obstacle(self.debug)
+        # print("INFO: {} - {} model is loaded".format(datetime.now(), obstacle_model.model_name))
+        #
+        # tailing_kidnapping_model = Tailing_Kidnapping(self.debug)
+        # print("INFO: {} - {} model is loaded".format(datetime.now(), tailing_kidnapping_model.model_name))
 
-        obstacle_model = Obstacle(self.debug)
-        print("INFO: {} - {} model is loaded".format(datetime.now(), obstacle_model.model_name))
-
-        tailing_kidnapping_model = Tailing_Kidnapping(self.debug)
-        print("INFO: {} - {} model is loaded".format(datetime.now(), tailing_kidnapping_model.model_name))
-
-        self.models.append(fight_detection_model)
-        self.models.append(wander_detection_model)
-        self.models.append(obstacle_model)
-        self.models.append(tailing_kidnapping_model)
+        # self.models.append(fight_detection_model)
+        # self.models.append(wander_detection_model)
+        # self.models.append(obstacle_model)
+        # self.models.append(tailing_kidnapping_model)
         print("INFO: {} - Server is Initialized".format(datetime.now()))
 
 

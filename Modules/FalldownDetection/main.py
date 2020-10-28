@@ -9,7 +9,7 @@ class FalldownDetection:
     path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self, debug):
-        self.model_name = "FalldownDetection"
+        self.model_name = "falldown"
         self.people_max = 100
         
         # print(self.model_name)

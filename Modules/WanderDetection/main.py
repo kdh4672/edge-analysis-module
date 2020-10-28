@@ -241,7 +241,7 @@ class WanderDetection:
     path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self, debug):
-        self.model_name = "WanderDetection"
+        self.model_name = "wanderer"
         self.id_stack = [0,0,0,0]
         self.wandering_id_list = []
         self.mot_tracker = Sort()
@@ -262,10 +262,10 @@ class WanderDetection:
             start = time.time()
 
 
-        od_result = od_result.decode('utf-8').replace("'", '"')
-        od_result = json.loads(od_result)
+        # od_result = od_result.decode('utf-8').replace("'", '"')
+        # od_result = json.loads(od_result)
         
-        frame = frame_num
+        frame = od_result["frame_num"]
         # frame = od_result["frame_num"]
         # print("frame: {}".format(frame))
         detection_result = od_result["results"][0]["detection_result"]

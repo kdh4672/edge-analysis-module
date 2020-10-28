@@ -4,6 +4,8 @@ import os
 from Decoder.CvDecoder import DecoderThread
 from Detection.EventsDetector import EventDetector
 from Detection.ObjectDetector import JIDetector
+import time
+import cv2
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="")
@@ -28,18 +30,33 @@ if __name__ == '__main__':
     event_detector = EventDetector()
 
     count = 0
-
-    while True :
+    cap = cv2.VideoCapture(video_path)
+    total_frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    cap.release()
+    print("Detection Start")
+    loop = True
+    event_time = 0
+    while loop :
         try :
             frame_info = decoder_thread.getFrameFromFQ()
             od_result = object_detector.detect(frame_info)
+            start_event = time.time()
             event_result = event_detector.detect_event(od_result)
+            end_event = time.time()
 
-            print("\rframe_num: {}\t/ json_count: {}".format(frame_info["frame_num"], count), end='')
+            event_time += (end_event - start_event)
+
+            print("\rframe_num: {:>6}/{} \t| json_count: {:>6}/{}".format(frame_info["frame_num"], total_frame_count, count, int(total_frame_count/opt.fps)), end='')
             count+=1
+            if not os.path.isdir(event_json_dir):
+                os.mkdir(event_json_dir)
             with open(os.path.join(event_json_dir, "%06d.json"%(count)), "w") as json_file:
                 json.dump(event_result, json_file, indent="\t")
                 json_file.close()
+            if count >= int(total_frame_count/opt.fps) :
+                print()
+                del decoder_thread
+                break
 
         except:
             pass
