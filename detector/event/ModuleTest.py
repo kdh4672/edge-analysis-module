@@ -1,4 +1,4 @@
-from detector.event.template.main import Event
+from wanderer.main import WandererEvent
 import argparse
 import os
 import json
@@ -12,13 +12,20 @@ if __name__ == '__main__':
     try:
         opt = parser.parse_known_args()[0]
 
-        model = Event()
+        model = WandererEvent()
         json_path = opt.json_path
+        # print(json_path)
+        json_file_list = os.listdir(json_path)
 
-        with open(json_path) as od_result_file:
-            detection_result = json.load(od_result_file)
+        json_file_list.sort()
+        # print(json_file_list)
+        for json_file in json_file_list:
+            json_file_path = os.path.join(json_path,json_file)
+            # print(json_file_path)
+            with open(json_file_path) as od_result_file:
+                detection_result = json.load(od_result_file)
 
-        print(model.inference(detection_result))
+            print(model.inference(detection_result))
 
     except:
         print("")
