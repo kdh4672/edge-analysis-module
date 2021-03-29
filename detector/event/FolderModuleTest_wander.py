@@ -40,7 +40,7 @@ def main(database_path, video_filename):
     height, width = 360,640
     
     fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-    out = cv2.VideoWriter('continues3.avi', fourcc, 1.0, (int(width), int(height)))
+    out = cv2.VideoWriter('/home/multi-buddha/EdgeAnalysisModule/detector/event/continues3.avi', fourcc, 1.0, (int(width), int(height)))
     frame_num = 0
     for json_file_name in json_file_list:
         
@@ -62,21 +62,27 @@ def main(database_path, video_filename):
             output,re_id = model.inference(od_result)
             # re_id_list=list(re_id.keys())[1:]
             # print(re_id_list)
-            print(re_id)
+            # print("re_id: {}".format(re_id))
             for bbox in bboxs:
 
                 if bbox["label"][0]["description"] == "person" and bbox["label"][0]["score"]>=0.5:
                     box = bbox["position"]
                     frame = cv2.rectangle(frame,(box["x"], box["y"]), (box["x"]+box["w"], box["y"]+box["h"]), (0,0,255),2)
-                for re_id_box in re_id_list:
+            # for i,re_id_box in enumerate(re_id["tracker"]):
                     # print(re_id[re_id_box]["boxs"][1])classes = len(class_names)
-                    offset = re_id_box * 123457 % 1000
-                    red = get_color(2, offset, 1000)
-                    green = get_color(1, offset, 1000)
-                    blue = get_color(0, offset, 1000)
-                    
-                    rgb = (red, green, blue)
-                    frame = cv2.putText(frame, str(re_id_box), (int(re_id[re_id_box]["boxs"][0]),int(re_id[re_id_box]["boxs"][1])), cv2.FONT_HERSHEY_SIMPLEX, 1, rgb, 2)
+                    # print(re_id_box[0])
+            # print(int(re_id["id_num"]) )
+            for re_ids in re_id:
+                # print(re_ids) 
+                offset = int(re_ids["id_num"]) * 123457 % 1000
+                red = get_color(2, offset, 1000)
+                green = get_color(1, offset, 1000)
+                blue = get_color(0, offset, 1000)
+                
+                rgb = (red, green, blue)
+                id_and_count = "id:" + str(int(re_ids["tracker"][4])) + ", count:" + str(re_ids["id_count"])
+                frame = cv2.putText(frame, id_and_count, (int(re_ids["tracker"][0]),int(re_ids["tracker"][1])), cv2.FONT_HERSHEY_SIMPLEX, 0.5, rgb, 2)
+                # frame = cv2.putText(frame, str(re_id_box), (int(re_id[re_id_box]["boxs"][0]),int(re_id[re_id_box]["boxs"][1])), cv2.FONT_HERSHEY_SIMPLEX, 1, rgb, 2)
             
             
             #print(json_file_name," - output:", output)
@@ -105,17 +111,17 @@ def main(database_path, video_filename):
             json.dump(result, json_file)
             '''
     
-    json_output_path = "./wander_yolov4_1fps.json"
-    with open(json_output_path, 'w', encoding="utf-8") as json_file:
-        json.dump(output_list, json_file, ensure_ascii=False, indent='\t')
+    # json_output_path = "./wander_yolov4_1fps.json"
+    # with open(json_output_path, 'w', encoding="utf-8") as json_file:
+    #     json.dump(output_list, json_file, ensure_ascii=False, indent='\t')
     
-    out.release()
+    # out.release()
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Please check your model")
     #parser.add_argument("--json_seq_path", type=str, default=os.path.join(os.getcwd(),"data","tracking"), help="sample json file path")
-    parser.add_argument("--database_path", type=str, default="/database/dabucheo/ObjectDetectionResult/ssd")
+    parser.add_argument("--database_path", type=str, default="/database/dabucheo/ObjectDetectionResult/yolo")
     parser.add_argument("--video_filename", type=str, default="1_360p")
     args = parser.parse_args()
     main(**args.__dict__)
